@@ -1,0 +1,63 @@
+#App para pedir comida
+
+##Pantalla principal
+
+- [ ] Listado de categorias (Comida, Bebida, Postres)
+- [ ] Boton para ver carrito
+- [ ] Buscador de productos
+
+##Pantalla de categoria
+
+- [ ] Listado de productos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
+- [ ] Boton para ver carrito
+
+##Pantalla de producto
+
+- [ ] Imagen del producto
+- [ ] Nombre del producto
+- [ ] Descripcion del producto
+- [ ] Precio del producto
+- [ ] Boton para agregar al carrito
+- [ ] Boton para ver carrito
+
+##Pantalla de carrito
+
+- [ ] Listado de productos con nombre, cantidad, precio, y boton para quitar del carrito
+- [ ] Boton para agregar un producto
+- [ ] Boton para eliminar todos los productos del carrito
+- [ ] Mostrar el total a pagar
+- [ ] Boton para continuar con el pedido
+
+##Pantalla de agregar producto
+
+- [ ] Listado de productos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
+- [ ] Boton para cancelar
+
+##Pantalla de eliminar productos del carrito
+
+- [ ] Listado de productos con nombre, cantidad, precio, y boton para quitar del carrito
+- [ ] Boton para cancelar
+
+##Pantalla de continuar con el pedido
+
+- [ ] Listado de productos con nombre, cantidad, precio
+- [ ] Mostrar el total a pagar
+- [ ] Boton para agregar un descuento
+- [ ] Boton para agregar un agregado
+- [ ] Boton para finalizar el pedido
+
+##Pantalla de agregar agregado o postre
+
+- [ ] Listado de agregados o postres con imagen, nombre, descripcion, precio, y boton para agregar al carrito
+- [ ] Boton para cancelar
+
+##Pantalla de agregar descuentos
+
+- [ ] Listado de descuentos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
+- [ ] Boton para cancelar
+
+##Pantalla de finalizar pedido
+
+- [ ] Mostrar el total a pagar
+- [ ] Boton para finalizar el pedido
+- [ ] Boton para cancelar
