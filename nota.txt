@@ -1,3 +1,4 @@
+#Esto es solo un listado inicial de como se hara cada pantalla del programa
 #App para pedir comida
 
 ##Pantalla principal

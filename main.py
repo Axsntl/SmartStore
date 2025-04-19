@@ -1,6 +1,8 @@
 import flet as ft
+#Aqui se importan las pantallas del programa
 from screens.splash import SplashScreen
 from screens.login import LoginScreen
+from screens.register import RegisterScreen
 
 def main(page: ft.Page):
     page.title = "Mi App Mercado"
@@ -17,6 +19,8 @@ def main(page: ft.Page):
             page.views.append(SplashScreen(page))
         elif page.route == "/login":
             page.views.append(LoginScreen(page))
+        elif page.route == "/register":
+            page.views.append(RegisterScreen(page))
 
         page.update()
 
