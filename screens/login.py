@@ -28,8 +28,8 @@ def LoginScreen(page):
                     password,
                     ft.ElevatedButton("Entrar", on_click=iniciar_sesion),
                     error_text,
-                    ft.ElevatedButton("Regístrate", on_click=lambda e: page.go("/register")),
                     registro_link
+                    
                 ],
                 alignment="center",
                 horizontal_alignment="center",
