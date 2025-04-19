@@ -4,6 +4,7 @@ def LoginScreen(page):
     email = ft.TextField(label="Correo electrónico", width=300)
     password = ft.TextField(label="Contraseña", password=True, can_reveal_password=True, width=300)
     error_text = ft.Text(value="", color="red")
+    registro_link = ft.TextButton("¿No tienes cuenta? Regístrate aquí", on_click=lambda e: page.go("/register"))
 
     def iniciar_sesion(e):
         if not email.value or not password.value:
@@ -25,6 +26,8 @@ def LoginScreen(page):
                 password,
                 ft.ElevatedButton("Entrar", on_click=iniciar_sesion),
                 error_text,
+                ft.ElevatedButton("Regístrate", on_click=lambda e: page.go("/register")),
+                registro_link
             ],
             alignment="center",
             horizontal_alignment="center",
