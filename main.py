@@ -5,9 +5,9 @@ from screens.login import LoginScreen
 from screens.register import RegisterScreen
 
 def main(page: ft.Page):
-    page.title = "Mi App Mercado"
-    page.window_width = 400
-    page.window_height = 700
+    page.title = "SmartStore"
+    page.window_width = 1980
+    page.window_height = 1080
     page.horizontal_alignment = "center"
     page.vertical_alignment = "center"
 

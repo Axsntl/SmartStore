@@ -20,17 +20,22 @@ def LoginScreen(page):
     return ft.View(
         route="/login",
         controls=[
-            ft.Column([
-                ft.Text("Iniciar Sesión", size=24, weight="bold"),
-                email,
-                password,
-                ft.ElevatedButton("Entrar", on_click=iniciar_sesion),
-                error_text,
-                ft.ElevatedButton("Regístrate", on_click=lambda e: page.go("/register")),
-                registro_link
-            ],
-            alignment="center",
-            horizontal_alignment="center",
-            expand=True)
+            ft.Container(
+                ft.Column([
+                    ft.Image(src="core/assets/icons/SSICON.png", width=100, height=100),
+                    ft.Text("Iniciar Sesión", size=24, weight="bold"),
+                    email,
+                    password,
+                    ft.ElevatedButton("Entrar", on_click=iniciar_sesion),
+                    error_text,
+                    ft.ElevatedButton("Regístrate", on_click=lambda e: page.go("/register")),
+                    registro_link
+                ],
+                alignment="center",
+                horizontal_alignment="center",
+                expand=True),
+            alignment=ft.alignment.center,
+            expand=True                
+            )
         ]
     )

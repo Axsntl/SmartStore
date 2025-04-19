@@ -23,17 +23,22 @@ def RegisterScreen(page):
     return ft.View(
         route="/register",
         controls=[
-            ft.Column([
-                ft.Text("Crear Cuenta", size=24, weight="bold"),
-                nombre,
-                email,
-                password,
-                confirmar,
-                ft.ElevatedButton("Registrarse", on_click=crear_cuenta),
-                error_text,
-            ],
-            alignment="center",
-            horizontal_alignment="center",
-            expand=True)
+            ft.Container(
+                ft.Column([
+                    ft.Image(src="core/assets/icons/SSICON.png", width=100, height=100),
+                    ft.Text("Crear Cuenta", size=24, weight="bold"),
+                    nombre,
+                    email,
+                    password,
+                    confirmar,
+                    ft.ElevatedButton("Registrarse", on_click=crear_cuenta),
+                    error_text,
+                ],
+                alignment="center",
+                horizontal_alignment="center",
+                expand=True),
+                alignment=ft.alignment.center,
+                expand=True,
+            )
         ]
     )
