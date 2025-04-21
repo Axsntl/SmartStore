@@ -1,4 +1,5 @@
 import flet as ft
+from db import verificar_usuario
 
 def LoginScreen(page):
     email = ft.TextField(label="Correo electrónico", width=300)
@@ -12,7 +13,10 @@ def LoginScreen(page):
         else:
             error_text.value = ""
             # Aquí puedes agregar autenticación real
-            print("Iniciando sesión con:", email.value)
+        if verificar_usuario(email.value, password.value):
+            page.go("/home")  # o lo que tengas
+        else:
+            error_text.value = "Usuario o contraseña incorrectos."
             # page.go("/home") luego
 
         page.update()

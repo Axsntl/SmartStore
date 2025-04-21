@@ -1,0 +1,1 @@
+  # Deshabilitar pantalla completa para usar resolución fija

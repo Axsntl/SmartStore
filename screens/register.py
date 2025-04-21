@@ -1,4 +1,5 @@
 import flet as ft
+from db import registrar_usuario
 
 def RegisterScreen(page):
     nombre = ft.TextField(label="Nombre completo", width=300)
@@ -15,8 +16,10 @@ def RegisterScreen(page):
         else:
             error_text.value = ""
             # Aquí se conectará con la base de datos más adelante
-            print("Registrando usuario:", nombre.value, email.value)
-            page.go("/login")  # Después del registro, ir al login
+            if registrar_usuario(nombre.value, email.value, password.value):
+                page.go("/login")
+            else:
+                error_text.value = "No se pudo registrar. ¿Correo ya en uso?"    
 
         page.update()
 

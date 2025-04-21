@@ -4,6 +4,8 @@ import threading
 
 def SplashScreen(page):
     def cargar_datos():
+        page.window_maximized = True
+
         time.sleep(5)  # Simulación de carga de datos
         page.go("/login")
 
