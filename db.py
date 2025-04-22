@@ -1,16 +1,19 @@
+# db.py
 import psycopg2
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Conexión a la base de datos PostgreSQL
+# Configuración para psycopg2 (registro, login)
 def conectar():
     return psycopg2.connect(
         dbname="SmartStore",
-        user="postgres",        # Reemplaza por tu usuario de PostgreSQL
-        password="1406", # Reemplaza por tu contraseña
-        host="localhost",         # O la IP del servidor si está en red
+        user="postgres",
+        password="1406",
+        host="localhost",
         port=5432
     )
 
-# Función para registrar un nuevo usuario
+# Funciones con psycopg2
 def registrar_usuario(nombre, email, contraseña):
     conn = conectar()
     cur = conn.cursor()
@@ -28,7 +31,6 @@ def registrar_usuario(nombre, email, contraseña):
         cur.close()
         conn.close()
 
-# Función para verificar el login
 def verificar_usuario(email, contraseña):
     conn = conectar()
     cur = conn.cursor()
@@ -44,3 +46,19 @@ def verificar_usuario(email, contraseña):
     finally:
         cur.close()
         conn.close()
+
+# Configuración para SQLAlchemy (uso en FastAPI)
+DATABASE_URL = "postgresql://postgres:1406@localhost:5432/SmartStore"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+# ✅ Esta función ahora sí puede ser importada por server.py
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+    

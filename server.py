@@ -2,88 +2,73 @@
 # Esto es para el servidor FastAPI asi bien maquiavelico por q no se como hacer un servidor de FastAPI en el mismo archivo pero tengo libre albedrio
 # ===================================================================================================================================================
 
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form, Depends
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
+import shutil, os
+
+from db import get_db, Base
+from models import ProductModel
 from pydantic import BaseModel
-from typing import Optional
-import psycopg2
-import os
-from uuid import uuid4
 
 app = FastAPI()
 
-# =========================
-# Configuración de archivos
-# =========================
+# Middleware CORS (necesario para conexión desde Flet u otros)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia esto si quieres restringir por seguridad
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Carpeta para archivos multimedia
 UPLOAD_DIR = "media"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+# Servir archivos estáticos desde /media/
 app.mount("/media", StaticFiles(directory=UPLOAD_DIR), name="media")
 
-# =========================
-# Modelo del producto
-# =========================
+# -------------------- #
+# MODELO DE PRODUCTO   #
+# -------------------- #
 class Product(BaseModel):
     nombre: str
     descripcion: str
     precio: float
-    stock: int
     categoria: str
+    stock: int
     imagen: str
-    video: Optional[str] = None
+    video: str | None = None
 
-# =========================
-# Conexión a la base de datos
-# =========================
-def get_db_connection():
-    conn = psycopg2.connect(
-        dbname="SmartStore",
-        user="postgres",
-        password="1406",
-        host="localhost",
-        port=5432
-    )
-    return conn
-
-# =========================
-# Subida de archivos
-# =========================
+# ------------------------ #
+# ENDPOINT: SUBIR ARCHIVO #
+# ------------------------ #
 @app.post("/upload/")
-async def subir_archivo(archivo: UploadFile = File(...)):
-    ext = archivo.filename.split('.')[-1]
-    nuevo_nombre = f"{uuid4()}.{ext}"
-    archivo_path = os.path.join(UPLOAD_DIR, nuevo_nombre)
+async def upload_file(archivo: UploadFile = File(...)):
+    file_path = os.path.join(UPLOAD_DIR, archivo.filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(archivo.file, f)
+    archivo_url = f"http://127.0.0.1:8000/media/{archivo.filename}"
+    return {"archivo_url": archivo_url}
 
-    with open(archivo_path, "wb") as f:
-        content = await archivo.read()
-        f.write(content)
-
-    return {"archivo_url": f"/media/{nuevo_nombre}"}
-
-# =========================
-# Agregar producto
-# =========================
+# ---------------------------- #
+# ENDPOINT: PUBLICAR PRODUCTO #
+# ---------------------------- #
 @app.post("/productos/")
-async def agregar_producto(producto: Product):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute('''
-        INSERT INTO productos (nombre, descripcion, precio, stock, categoria, imagen, video)
-        VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
-    ''', (
-        producto.nombre,
-        producto.descripcion,
-        producto.precio,
-        producto.stock,
-        producto.categoria,
-        producto.imagen,
-        producto.video
-    ))
-
-    producto_id = cursor.fetchone()[0]
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    return {"mensaje": "Producto agregado con éxito", "producto_id": producto_id, "producto": producto.dict()}
+async def crear_producto(producto: Product, db: Session = Depends(get_db)):
+    nuevo_producto = ProductModel(
+        nombre=producto.nombre,
+        descripcion=producto.descripcion,
+        precio=producto.precio,
+        categoria=producto.categoria,
+        stock=producto.stock,
+        imagen_path=producto.imagen,
+        video_path=producto.video
+    )
+    db.add(nuevo_producto)
+    db.commit()
+    db.refresh(nuevo_producto)
+    return JSONResponse(status_code=200, content={"mensaje": "Producto publicado correctamente"})
