@@ -118,6 +118,7 @@ def ProductUploadView(page: ft.Page):
                             ft.ElevatedButton("Seleccionar video", on_click=pick_video, icon=ft.icons.VIDEO_FILE),
                         ]),
                         ft.ElevatedButton("Publicar producto", on_click=publicar_producto, icon=ft.icons.UPLOAD),
+                        ft.ElevatedButton("Volver", on_click=lambda _: page.go_back(), icon=ft.icons.ARROW_BACK),  # Botón para retroceder
                     ],
                     spacing=15,
                 ),
