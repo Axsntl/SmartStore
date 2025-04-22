@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 import shutil, os
 
-from db import get_db, Base
+from db import get_db
 from models import ProductModel
 from pydantic import BaseModel
 
