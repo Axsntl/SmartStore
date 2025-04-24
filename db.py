@@ -36,10 +36,13 @@ def verificar_usuario(email, contraseña):
     cur = conn.cursor()
     try:
         cur.execute(
-            "SELECT * FROM usuarios WHERE email = %s AND contraseña = %s",
+            "SELECT id, nombre FROM usuarios WHERE email = %s AND contraseña = %s",#Se cambio el codigo para que solo seleccione lo necesario.
             (email, contraseña)
         )
-        return cur.fetchone() is not None
+        resultado = cur.fetchone()
+        if resultado:
+            return resultado  # Devuelve un tuple con (id, nombre)
+        return None  # Devuelve None si no se encuentra el usuario
     except Exception as e:
         print("Error al verificar:", e)
         return False

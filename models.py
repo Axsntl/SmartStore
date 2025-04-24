@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Text, Numeric, TIMESTAMP
 from db import Base
-
+#Una breve explicación de lo que es models es que models se refiere a los modelos de la base de datos, la manera en que se guardan los datos en la base de datos,
+#Pues en la base de datos es de esa forma osea id=column se guardo como integrer, osea un entero.
 class ProductModel(Base):
     __tablename__ = "productos"
 

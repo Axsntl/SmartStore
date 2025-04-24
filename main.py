@@ -5,6 +5,7 @@ from screens.login import LoginScreen
 from screens.register import RegisterScreen
 from screens.home import HomeView
 from screens.productupload import ProductUploadView
+from screens.product_detail import ProductDetailView
 
 def main(page: ft.Page):
     page.title = "SmartStore"
@@ -27,6 +28,11 @@ def main(page: ft.Page):
             page.views.append(HomeView(page))
         elif page.route == "/sell":
             page.views.append(ProductUploadView(page))
+        elif page.route.startswith("/producto/"):
+            product_id = int(page.route.split("/")[-1])
+            from screens.product_detail import ProductDetailView
+            page.views.append(ProductDetailView(page, product_id))
+
 
         page.update()
 
