@@ -1,3 +1,4 @@
+#Esta pantalla se muestra al iniciar la aplicación y simula la carga de datos. Su función es meramente estética.
 import flet as ft
 import time
 import threading

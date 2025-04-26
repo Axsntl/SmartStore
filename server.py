@@ -4,6 +4,9 @@
 
 #Aparentemente no se puede hacer un servidor FastAPI en el mismo archivo que el de Flet, por lo que se hace un servidor FastAPI independiente
 #Ademas, se tienen que definir el get y el post, si no no se puede hacer el post de los productos, y tampoco se puede hacer el get de los productos. Un poco evidende, pero bueno.
+# No era tan dificil hacer el servidor
+# NOTA: uvicorn no se menciona pero es necesario para correr el servidor FastAPI. Se usa uvicorn para correr el servidor FastAPI, y se usa el comando uvicorn server:app --reload para correr el servidor. El --reload es para que se recargue automaticamente cuando se hacen cambios en el codigo. Se puede cambiar por --host
+# Para cerrar el servidor, se puede usar Ctrl + C en la terminal donde se esta ejecutando el servidor.
 from fastapi import FastAPI, UploadFile, File, Form, Depends
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,22 +27,22 @@ app = FastAPI()
 # Middleware CORS (necesario para conexión desde Flet u otros)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambia esto si quieres restringir por seguridad
+    allow_origins=["*"],  # Cambiar esto para restringir por seguridad
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Carpeta para archivos multimedia
-UPLOAD_DIR = "media"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+UPLOAD_DIR = "media" # Cambiar a la ruta deseada, pero dentro de la carpeta del proyecto, osea solo se crea otra carpeta y se cambia media por el nombre de la carpeta deseada.
+os.makedirs(UPLOAD_DIR, exist_ok=True)# Crear la carpeta si no existe
 
 # Servir archivos estáticos desde /media/
 app.mount("/media", StaticFiles(directory=UPLOAD_DIR), name="media")
 
-# --------------------- #
-# CLASE DE PRODUCTO :0  #
-# --------------------- #
+# --------------------------- #
+# *CLASE* DE PRODUCTO :00000  #
+# --------------------------- #
 class Product(BaseModel):
     nombre: str
     descripcion: str
@@ -74,6 +77,7 @@ async def crear_producto(producto: Product, db: Session = Depends(get_db)):
         imagen_path=producto.imagen,
         video_path=producto.video
     )
+    # Guardar el producto en la base de datos
     db.add(nuevo_producto)
     db.commit()
     db.refresh(nuevo_producto)
@@ -100,3 +104,7 @@ def obtener_productos(db: Session = Depends(get_db)):
         for p in productos
     ]
 #FASTAPI fue creado por Sebastian Ramirez un Colombiano
+#NOTA: En Requests existen funciones como GET, POST, PUT, DELETE, PATCH, OPTIONS y HEAD. GET es para obtener datos, POST es para enviar datos, PUT es para actualizar datos, DELETE es para eliminar datos, PATCH es para actualizar parcialmente datos, OPTIONS es para obtener las opciones de un recurso y HEAD es para obtener los encabezados de una respuesta sin el cuerpo.
+# En este caso, se usan GET y POST para obtener y enviar datos respectivamente.
+#Tener en cuenta el Delete para mas adelante, ya que se puede usar para eliminar productos de la base de datos.
+# Por si acaso, ENDPOINT se refiere a un punto de acceso a la API, y en este caso se usan los endpoints /upload/ y /productos/ para subir y obtener productos respectivamente.
