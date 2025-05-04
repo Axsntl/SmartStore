@@ -108,3 +108,24 @@ def obtener_productos(db: Session = Depends(get_db)):
 # En este caso, se usan GET y POST para obtener y enviar datos respectivamente.
 #Tener en cuenta el Delete para mas adelante, ya que se puede usar para eliminar productos de la base de datos.
 # Por si acaso, ENDPOINT se refiere a un punto de acceso a la API, y en este caso se usan los endpoints /upload/ y /productos/ para subir y obtener productos respectivamente.
+
+class StockUpdate(BaseModel):
+    delta: int
+
+@app.patch("/productos/{producto_id}/stock")
+def actualizar_stock(producto_id: int, data: StockUpdate, db: Session = Depends(get_db)):
+    """
+    Recibe {"delta": -1} o {"delta": 1} para restar o sumar al stock.
+    """
+    delta = data.delta
+    # Busca el producto
+    producto = db.query(ProductModel).filter(ProductModel.id == producto_id).first()
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    # Ajusta stock
+    nuevo_stock = producto.stock + delta
+    if nuevo_stock < 0:
+        raise HTTPException(status_code=400, detail="Stock insuficiente")
+    producto.stock = nuevo_stock
+    db.commit()
+    return {"id": producto_id, "stock": producto.stock}

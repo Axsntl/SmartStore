@@ -8,7 +8,9 @@ from screens.register import RegisterScreen
 from screens.home import HomeView
 from screens.productupload import ProductUploadView
 from screens.product_detail import ProductDetailView
-from screens.cart import VistaCarrito
+from screens.cart import CartView
+
+
 def main(page: ft.Page):
     page.title = "SmartStore"
     page.window_full_screen = True  # Deshabilitar pantalla completa para usar resolución fija. Nota: Se supone que eso haria pero a la hora de ejecutar el programa no afecta nada. Quiza sea cosa de mi computadora.
@@ -36,8 +38,8 @@ def main(page: ft.Page):
             product_id = int(page.route.split("/")[-1])
             from screens.product_detail import ProductDetailView
             page.views.append(ProductDetailView(page, product_id))
-        elif page.route == "/cartview":
-            page.views.append(VistaCarrito(page))
+        elif page.route == "/cart":
+            page.views.append(CartView(page))
             
         #para que la vista se vea bien al cambiar de ruta, se actualiza la página con page.update()
         page.update()

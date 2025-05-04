@@ -1,64 +1,52 @@
-#Esto es solo un listado inicial de como se hara cada pantalla del programa
-#App para pedir comida
+Por ahora espero que sea manual el proceso de armar las cosas como el servidor y el ejecutable, pero espero que despues sea mas sencillo
+-Comando para iniciar el servidor
+uvicorn server:app --reload
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    correo VARCHAR(100) UNIQUE,
+    contraseña TEXT
+);
 
-##Pantalla principal
+-Comando para postgresql para crear la tabla productos
+CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio NUMERIC(10, 2) NOT NULL,
+    categoria VARCHAR(50),
+    stock INTEGER DEFAULT 0,
+    imagen_path TEXT,
+    video_path TEXT,
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    vendedor_id INTEGER REFERENCES usuarios(id)
+);
+-Comando para SQL (Tabla completa de productos)
+CREATE TABLE IF NOT EXISTS public.productos
+(
+    id integer NOT NULL DEFAULT nextval('productos_id_seq'::regclass),
+    nombre character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    descripcion text COLLATE pg_catalog."default",
+    precio numeric(10,2) NOT NULL,
+    categoria character varying(50) COLLATE pg_catalog."default",
+    stock integer DEFAULT 0,
+    imagen_path text COLLATE pg_catalog."default",
+    video_path text COLLATE pg_catalog."default",
+    fecha_publicacion timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    vendedor_id integer,
+    CONSTRAINT productos_pkey PRIMARY KEY (id),
+    CONSTRAINT productos_vendedor_id_fkey FOREIGN KEY (vendedor_id)
+        REFERENCES public.usuarios (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
 
-- [ ] Listado de categorias (Comida, Bebida, Postres)
-- [ ] Boton para ver carrito
-- [ ] Buscador de productos
+TABLESPACE pg_default;
 
-##Pantalla de categoria
+ALTER TABLE IF EXISTS public.productos
+    OWNER to postgres;
+-Comando para el ejecutable
+pyinstaller --onefile --windowed --add-data "core/assets/icons/SSICON.png;core/assets/icons" main.py
 
-- [ ] Listado de productos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
-- [ ] Boton para ver carrito
-
-##Pantalla de producto
-
-- [ ] Imagen del producto
-- [ ] Nombre del producto
-- [ ] Descripcion del producto
-- [ ] Precio del producto
-- [ ] Boton para agregar al carrito
-- [ ] Boton para ver carrito
-
-##Pantalla de carrito
-
-- [ ] Listado de productos con nombre, cantidad, precio, y boton para quitar del carrito
-- [ ] Boton para agregar un producto
-- [ ] Boton para eliminar todos los productos del carrito
-- [ ] Mostrar el total a pagar
-- [ ] Boton para continuar con el pedido
-
-##Pantalla de agregar producto
-
-- [ ] Listado de productos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
-- [ ] Boton para cancelar
-
-##Pantalla de eliminar productos del carrito
-
-- [ ] Listado de productos con nombre, cantidad, precio, y boton para quitar del carrito
-- [ ] Boton para cancelar
-
-##Pantalla de continuar con el pedido
-
-- [ ] Listado de productos con nombre, cantidad, precio
-- [ ] Mostrar el total a pagar
-- [ ] Boton para agregar un descuento
-- [ ] Boton para agregar un agregado
-- [ ] Boton para finalizar el pedido
-
-##Pantalla de agregar agregado o postre
-
-- [ ] Listado de agregados o postres con imagen, nombre, descripcion, precio, y boton para agregar al carrito
-- [ ] Boton para cancelar
-
-##Pantalla de agregar descuentos
-
-- [ ] Listado de descuentos con imagen, nombre, descripcion, precio, y boton para agregar al carrito
-- [ ] Boton para cancelar
-
-##Pantalla de finalizar pedido
-
-- [ ] Mostrar el total a pagar
-- [ ] Boton para finalizar el pedido
-- [ ] Boton para cancelar
+-Comando para instalar los paquetes de manera local
+pip install --no-index --find-links=paquetes -r requirements.txt

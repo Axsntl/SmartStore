@@ -15,12 +15,10 @@ def agregar_al_carrito(producto):
     for item in carrito:
         if item["id"] == producto["id"]:
             item["cantidad"] += 1
-            actualizar_stock_backend(producto["id"], -1)  # Reducir stock en el servidor
             return
     nuevo = producto.copy()
     nuevo["cantidad"] = 1
     carrito.append(nuevo)
-    actualizar_stock_backend(producto["id"], -1)  # Reducir stock en el servidor
 
 
 def eliminar_producto(producto_id):

@@ -56,7 +56,7 @@ def HomeView(page: ft.Page):
         crear_boton("Perfil", ft.icons.ACCOUNT_CIRCLE, "/profile"),
         crear_boton("Compras", ft.icons.SHOPPING_BAG, "/purchases"),
         crear_boton("Notificaciones", ft.icons.NOTIFICATIONS, "/notifications"),
-        crear_boton("Seguimiento", ft.icons.SHOPPING_CART, "/cart"),
+        crear_boton("Carrito", ft.icons.SHOPPING_CART, "/cart"),
     ]
 
     # Contenedor donde se insertarán los productos desde la API

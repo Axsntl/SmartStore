@@ -1,5 +1,4 @@
 ![Logo](core/assets/icons/SSICON.png)
-# SmartStore
 Proyecto de gestor de tienda para el proyecto de ITSHopelchen
 
 ## Descripción
@@ -17,8 +16,8 @@ La lista de los paquetes es la siguiente:
 -Uvicorn. (Es un servidor web para Python basado en uvloop y hyper, en este caso se usa para montar el servidor FastAPI)
 
 ### 1.- Linea para instalar los paquetes en la terminal
-pip install flet sqlalchemy psycopg2 fastapi pydantic uvicorn
+`pip install flet sqlalchemy psycopg2 fastapi pydantic uvicorn`
 ### 2.- Iniciar la base de datos
-Despues sera necesario que instales [PostgreSQL](https://www.postgresql.org/download/windows/) y crear una base de datos llamada "SmartStore" con el siguiente comando en la terminal de windows: psql -U postgres -c "CREATE DATABASE SmartStore;", para iniciar la base de datos de postgresql se debe usar el siguiente comando en la terminal de windows: pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start
+Despues sera necesario que instales [PostgreSQL](https://www.postgresql.org/download/windows/) y crear una base de datos llamada "SmartStore" con el siguiente comando en la terminal de windows: psql -U postgres -c "CREATE DATABASE SmartStore;", para iniciar la base de datos de postgresql se debe usar el siguiente comando en la terminal de windows: pg_ctl -D "C:\Program Files\PostgreSQL\15\data" start (Aunque es recomenda)
 Asegurate de que la instalación sea en la carpeta correcta de tu pc o la que esta por defecto, ya que es necesario para que el servidor funcione correctamente.
 ## Instrucciones de uso
