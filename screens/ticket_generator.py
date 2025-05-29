@@ -107,3 +107,4 @@ def generar_ticket_pdf(usuario: dict, carrito: list, output_dir: str = None) -> 
     except Exception as e:
         print(f"DEBUG: Error al generar PDF: {e}")
         return None
+# El pdf se genera en el directorio especificado o en el predeterminado, util si se quiere lanzar como programa

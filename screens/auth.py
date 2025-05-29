@@ -19,3 +19,4 @@ def set_usuario_activo(usuario):
 
 # Alias para compatibilidad
 iniciar_sesion = set_usuario_activo
+#Se puede usar mas tarde para mostrarlo en la pantalla de inicio y ademas enlazar el usuario con un id de vendedor, función que esta presente en la base de datos de los productos

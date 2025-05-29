@@ -1,6 +1,9 @@
 import flet as ft
 import requests
 import os
+import screens.auth as auth
+import threading
+import time
 
 def ProductUploadView(page: ft.Page):
     # Controles
@@ -24,7 +27,9 @@ def ProductUploadView(page: ft.Page):
     imagen_path = ft.Text(value="", visible=False)
     video_path = ft.Text(value="", visible=False)
 
-    def show_snackbar(msg, color=ft.colors.BLUE):
+    loading = ft.ProgressRing(visible=False)
+
+    def show_snackbar(msg, color=ft.Colors.BLUE):
         page.snack_bar = ft.SnackBar(ft.Text(msg), bgcolor=color)
         page.snack_bar.open = True
         page.update()
@@ -59,7 +64,7 @@ def ProductUploadView(page: ft.Page):
                 if response.status_code == 200:
                     return response.json()["archivo_url"]
         except Exception as e:
-            show_snackbar(f"Error al subir archivo: {e}", color=ft.colors.RED)
+            show_snackbar(f"Error al subir archivo: {e}", color=ft.Colors.RED)
         return None
 
     def publicar_producto(e):
@@ -69,36 +74,52 @@ def ProductUploadView(page: ft.Page):
             precio_ctrl.value, stock_ctrl.value,
             categoria_ctrl.value, imagen_path.value
         ]):
-            show_snackbar("Todos los campos excepto el video son obligatorios", color=ft.colors.RED)
+            show_snackbar("Todos los campos excepto el video son obligatorios", color=ft.Colors.RED)
             return
 
-        # Subir imagen y video
-        imagen_url = subir_archivo(imagen_path.value)
-        video_url = subir_archivo(video_path.value) if video_path.value else None
+        # Mostrar círculo de carga
+        loading.visible = True
+        page.update()
 
-        if not imagen_url:
-            show_snackbar("Error al subir imagen", color=ft.colors.RED)
-            return
+        def tarea():
+            # Subir imagen y video
+            imagen_url = subir_archivo(imagen_path.value)
+            video_url = subir_archivo(video_path.value) if video_path.value else None
 
-        # Crear el producto
-        producto = {
-            "nombre": nombre_ctrl.value,
-            "descripcion": descripcion_ctrl.value,
-            "precio": float(precio_ctrl.value),
-            "stock": int(stock_ctrl.value),
-            "categoria": categoria_ctrl.value,
-            "imagen": imagen_url,
-            "video": video_url
-        }
+            if not imagen_url:
+                loading.visible = False
+                page.update()
+                show_snackbar("Error al subir imagen", color=ft.Colors.RED)
+                return
 
-        try:
-            response = requests.post("http://127.0.0.1:8000/productos/", json=producto)
-            if response.status_code == 200:
-                show_snackbar("Producto publicado correctamente", color=ft.colors.GREEN)
-            else:
-                show_snackbar("Error al registrar el producto", color=ft.colors.RED)
-        except Exception as ex:
-            show_snackbar(f"Error de conexión: {ex}", color=ft.colors.RED)
+            # Crear el producto
+            producto = {
+                "nombre": nombre_ctrl.value,
+                "descripcion": descripcion_ctrl.value,
+                "precio": float(precio_ctrl.value),
+                "stock": int(stock_ctrl.value),
+                "categoria": categoria_ctrl.value,
+                "imagen": imagen_url,
+                "video": video_url,
+                "vendedor_id": auth.usuario_actual["id"]  # Enlace con el usuario
+            }
+
+            try:
+                response = requests.post("http://127.0.0.1:8000/productos/", json=producto)
+                loading.visible = False
+                page.update()
+                if response.status_code == 200:
+                    show_snackbar("Producto publicado correctamente", color=ft.Colors.GREEN)
+                    time.sleep(1.2)  # Espera breve para mostrar el mensaje
+                    page.go("/home")
+                else:
+                    show_snackbar("Error al registrar el producto", color=ft.Colors.RED)
+            except Exception as ex:
+                loading.visible = False
+                page.update()
+                show_snackbar(f"Error de conexión: {ex}", color=ft.Colors.RED)
+
+        threading.Thread(target=tarea).start()
 
     return ft.View(
         route="/sell",
@@ -114,11 +135,12 @@ def ProductUploadView(page: ft.Page):
                         ft.Row([precio_ctrl, stock_ctrl]),
                         categoria_ctrl,
                         ft.Row([
-                            ft.ElevatedButton("Seleccionar imagen", on_click=pick_imagen, icon=ft.icons.IMAGE),
-                            ft.ElevatedButton("Seleccionar video", on_click=pick_video, icon=ft.icons.VIDEO_FILE),
+                            ft.ElevatedButton("Seleccionar imagen", on_click=pick_imagen, icon=ft.Icons.IMAGE),
+                            ft.ElevatedButton("Seleccionar video", on_click=pick_video, icon=ft.Icons.VIDEO_FILE),
                         ]),
-                        ft.ElevatedButton("Publicar producto", on_click=publicar_producto, icon=ft.icons.UPLOAD),
-                        ft.ElevatedButton("Volver", on_click=lambda _: page.go("/home"), icon=ft.icons.ARROW_BACK)
+                        loading,
+                        ft.ElevatedButton("Publicar producto", on_click=publicar_producto, icon=ft.Icons.UPLOAD),
+                        ft.ElevatedButton("Volver", on_click=lambda _: page.go("/home"), icon=ft.Icons.ARROW_BACK)
                     ],
                     spacing=15,
                 ),

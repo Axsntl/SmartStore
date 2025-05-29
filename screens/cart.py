@@ -57,7 +57,7 @@ def vaciar_carrito():
     carrito.clear()
 
 
-def mostrar_snackbar(page, mensaje, color=ft.colors.GREEN):
+def mostrar_snackbar(page, mensaje, color=ft.Colors.GREEN):
     """Muestra una notificación al usuario."""
     page.snack_bar = ft.SnackBar(ft.Text(mensaje), bgcolor=color)
     page.snack_bar.open = True
@@ -222,3 +222,5 @@ def CartView(page: ft.Page):
             )
         ]
     )
+# Con la función rebuild hace que se actualice la pagina, por asi decirlo, por ahora la función solo esta en esta pantalla, ya que se tuvo que reacer el codigo, y no es como que me paguen por hacer esto
+#parapapapaparapapa

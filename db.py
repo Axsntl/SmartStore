@@ -16,7 +16,8 @@ def conectar():
         host="localhost",
         port=5432
     )
-
+#Hay que tener en cuenta que dependiendo el servidor de sql se van a tener que cambiar el nombre y la contraseña que se tengan en esa instancia de postgresql
+#En este caso, los campos tienen los datos que se usan para el programa desde las pruebas base.
 
 def registrar_usuario(nombre, email, contraseña):
     """Inserta un nuevo usuario en la tabla 'usuarios'. Retorna True si tuvo éxito."""
@@ -79,7 +80,7 @@ DATABASE_URL = "postgresql://postgres:1406@localhost:5432/SmartStore"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
-
+#Tambien aqui se tiene que hacer los respectivos cambios del nombre y la contraseña de la instancia de postgresql
 
 def get_db():
     """Generador de sesión para FastAPI Dependency Injection."""

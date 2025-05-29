@@ -51,6 +51,7 @@ class Product(BaseModel):
     stock: int
     imagen: str
     video: str | None = None
+    vendedor_id: int
 
 # ------------------------ #
 # ENDPOINT: SUBIR ARCHIVO #
@@ -75,7 +76,8 @@ async def crear_producto(producto: Product, db: Session = Depends(get_db)):
         categoria=producto.categoria,
         stock=producto.stock,
         imagen_path=producto.imagen,
-        video_path=producto.video
+        video_path=producto.video,
+        vendedor_id=producto.vendedor_id  # <-- AGREGADO
     )
     # Guardar el producto en la base de datos
     db.add(nuevo_producto)
@@ -129,3 +131,97 @@ def actualizar_stock(producto_id: int, data: StockUpdate, db: Session = Depends(
     producto.stock = nuevo_stock
     db.commit()
     return {"id": producto_id, "stock": producto.stock}
+#Si esto es solo en python, no me imagino el dolor de cabeza que tiene que ser en otros lenguajes.
+
+#Damn, con esto ya va el get, el post y el patch, ahora solo falta el delete y ya esta.
+
+#Ahora se hara para finalizar el CRUD de productos, se hara el DELETE para eliminar productos de la base de datos.
+#Con esto se puede hacer un CRUD completo de productos, y se puede usar para crear una tienda online completa, o al menos una parte de ella.
+#El flujo de datos esta completo.
+# ---------------------------- #
+# ENDPOINT PARA ELIMINAR PRODUCTOS #
+# ---------------------------- #
+@app.delete("/productos/{producto_id}")
+def eliminar_producto(producto_id: int, db: Session = Depends(get_db)):
+    """
+    Elimina un producto de la base de datos.
+    """
+    # Busca el producto
+    producto = db.query(ProductModel).filter(ProductModel.id == producto_id).first()
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    # Elimina el producto
+    db.delete(producto)
+    db.commit()
+    return {"mensaje": "Producto eliminado correctamente"}
+# ---------------------------- #
+# ENDPOINT: OBTENER PRODUCTOS DE UN VENDEDOR #
+# ---------------------------- #
+@app.get("/mis_productos/{vendedor_id}")
+def obtener_mis_productos(vendedor_id: int, db: Session = Depends(get_db)):
+    productos = db.query(ProductModel).filter(ProductModel.vendedor_id == vendedor_id).all()
+    return [
+        {
+            "id": p.id,
+            "nombre": p.nombre,
+            "descripcion": p.descripcion,
+            "precio": float(p.precio),
+            "stock": p.stock,
+            "categoria": p.categoria,
+            "imagen_path": p.imagen_path,
+            "video_path": p.video_path,
+            "vendedor_id": p.vendedor_id,
+        }
+        for p in productos
+    ]
+    # La parte agregada es para obtener los productos del vendedor logueado. Se supone que half life 3 saldra pronto, espero que sea cierto.
+    #Ya se agregaron mas lineas, mas de lo que esperaba, pero bueno, al menos ya esta el CRUD completo de productos.
+
+from pydantic import BaseModel
+
+class DescripcionUpdate(BaseModel):
+    descripcion: str
+
+@app.patch("/productos/{producto_id}/descripcion")
+def actualizar_descripcion(producto_id: int, data: DescripcionUpdate, db: Session = Depends(get_db)):
+    """
+    Actualiza la descripción de un producto.
+    """
+    producto = db.query(ProductModel).filter(ProductModel.id == producto_id).first()
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    producto.descripcion = data.descripcion
+    db.commit()
+    return {"id": producto_id, "descripcion": producto.descripcion}
+
+class PrecioUpdate(BaseModel):
+    precio: float
+
+@app.patch("/productos/{producto_id}/precio")
+def actualizar_precio(producto_id: int, data: PrecioUpdate, db: Session = Depends(get_db)):
+    """
+    Actualiza el precio de un producto.
+    """
+    producto = db.query(ProductModel).filter(ProductModel.id == producto_id).first()
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    producto.precio = data.precio
+    db.commit()
+    return {"id": producto_id, "precio": float(producto.precio)}
+
+@app.get("/productos/{producto_id}")
+def obtener_producto(producto_id: int, db: Session = Depends(get_db)):
+    producto = db.query(ProductModel).filter(ProductModel.id == producto_id).first()
+    if not producto:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    return {
+        "id": producto.id,
+        "nombre": producto.nombre,
+        "descripcion": producto.descripcion,
+        "precio": float(producto.precio),
+        "stock": producto.stock,
+        "categoria": producto.categoria,
+        "imagen_path": producto.imagen_path,
+        "video_path": producto.video_path,
+        "vendedor_id": producto.vendedor_id,
+    }

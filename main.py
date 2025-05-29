@@ -9,6 +9,9 @@ from screens.home import HomeView
 from screens.productupload import ProductUploadView
 from screens.product_detail import ProductDetailView
 from screens.cart import CartView
+from screens.search import SearchView
+from screens.profile import ProfileView
+from screens.categories import CategoriesView
 
 
 def main(page: ft.Page):
@@ -40,7 +43,15 @@ def main(page: ft.Page):
             page.views.append(ProductDetailView(page, product_id))
         elif page.route == "/cart":
             page.views.append(CartView(page))
-            
+        elif page.route.startswith("/search/"):
+            query = page.route.split("/search/")[1]
+            page.views.append(SearchView(page, query))
+        elif page.route == "/profile":
+            page.views.append(ProfileView(page))
+        elif page.route.startswith("/categories/"):
+            categoria = page.route.split("/categories/")[1]
+            page.views.append(CategoriesView(page, categoria))
+
         #para que la vista se vea bien al cambiar de ruta, se actualiza la página con page.update()
         page.update()
     # Se asigna la función de cambio de ruta al evento on_route_change de la página.
