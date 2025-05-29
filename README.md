@@ -2,19 +2,19 @@
 Proyecto de gestor de tienda para el proyecto de ITSHopelchen
 
 ## Descripción
-Un programa para el proyecto de interfaces de tienda como proyecto final de la materia de POO que se salio un poco de las manos.
+Un programa para el proyecto de interfaces de tienda como proyecto final de la materia de POO hecho en python,que se salio un poco de las manos.
 
 ## Funcionalidades
 - Interfaz de usuario con Flet.
 - Base de datos con PostgreSQL.
 - Servidor con FastAPI.
 - Logeo y registro de productos.
-- Pagina de inicio.
-- Pagina de categorias.
+- Pantalla de inicio.
+- Pantalla de categorias.
 - Subida de productos con información basica (Imagen, titulo, precio, descripcion, stock, video opcional y registro del usuario que lo subio).
 - Barra de busqueda funcional, con busqueda de palabras clave, desde el titulo hasta la descripcion.
 - Carrito de compras.
-- Pagina de perfil, con los productos que el usuario haya subido (con la opcion de ver las compras sin terminar).
+- Pantalla de perfil, con los productos que el usuario haya subido (con la opcion de ver las compras sin terminar).
 - Visualización basica de la información de los productos.
 ## Instalación
 Antes de iniciar con cualquier paso del programa se deben descargar los paquetes usados en el programa, estos paquetes se pueden descargar facilmente desde la interfaz de comandos de python o desde la terminal de windows. Para descargar los paquetes se debe ejecutar el siguiente comando en la terminal de windows: pip install (Aqui ira el nombre del paquete a descargar).
