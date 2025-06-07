@@ -49,4 +49,4 @@ ALTER TABLE IF EXISTS public.productos
 pyinstaller --onefile --windowed --add-data "core/assets/icons/SSICON.png;core/assets/icons" main.py
 
 -Comando para instalar los paquetes de manera local
-pip install --no-index --find-links=paquetes -r requirements.txt
+pip install --no-index --find-links=paquetes_offline -r requirements.txt
